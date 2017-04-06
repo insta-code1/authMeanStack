@@ -1,7 +1,7 @@
 module.exports = {
 
   testResponse(req, res) {
-    res.send("It works!");
+    res.send({ content: "It works!" });
   }
 
 };
