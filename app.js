@@ -3,6 +3,14 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
+const mongoose = require('mongoose');
+
+if (process.env.NODE_ENV !== "test") {
+  mongoose.connect('mongodb://localhost/authapp');
+  mongoose.connection
+    .once('open', () => console.log('Connected to Mongodb'))
+    .on('error', error => console.log(`Mongodb Connection Error: ${error}`));
+}
 
 const port = process.env.PORT || 5000;
 
