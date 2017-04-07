@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('../db/mongoose');
 const Schema = mongoose.Schema;
+const validator = require('validator');
 
 const userSchema = new Schema({
   username: {
@@ -27,3 +28,7 @@ const userSchema = new Schema({
     minlength: 6
   }
 });
+
+const User = mongoose.model('user', userSchema);
+
+module.exports = User;
