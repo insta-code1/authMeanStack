@@ -52,9 +52,6 @@ userSchema.pre('save', function(next) {
 });
 
 
-
-
-
 userSchema.methods.confirmUser = function () {
   let user = this;
   let userObj = user.toObject();

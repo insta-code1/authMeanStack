@@ -2,6 +2,7 @@ const assert = require('assert');
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../../app');
+let { paul, tony, sarah } = require('./example_user');
 
 const User = mongoose.model('user');
 /*
@@ -73,6 +74,19 @@ describe('Users controller', () => {
             done();
           });
       });
+  });
+
+  it('should confirm the input pw is different to the stored pw', (done) => {
+    let paul1 = new User(paul);
+    paul1.save()
+      .then(() => {
+        return User.findOne({email: paul.email})
+      })
+      .then((user) => {
+        assert(user.password !== paul.password);
+        done();
+      })
+      .catch(e => done(e));
   });
 
 });
