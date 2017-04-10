@@ -14,7 +14,7 @@ module.exports = {
     User.create(userAttr)
       .then(user => {
         res.send(user);
-      }).catch(e => res.send(e));
+      }).catch(e => res.send(e.errors));
 
   }
 
