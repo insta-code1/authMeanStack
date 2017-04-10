@@ -13,7 +13,7 @@ module.exports = {
 
     User.create(userAttr)
       .then(user => {
-        res.send(user);
+        res.send(user.confirmUser());
       }).catch(e => res.send(e.errors));
 
   }

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
+const _ = require('lodash');
 
 
 const userSchema = new Schema({
@@ -32,6 +33,16 @@ const userSchema = new Schema({
 });
 
 userSchema.plugin(uniqueValidator);
+
+
+userSchema.methods.confirmUser = function () {
+  let user = this;
+  let userObj = user.toObject();
+
+  return _.pick(userObj, ["username", "email", "_id"]);
+};
+
+
 
 const User = mongoose.model('user', userSchema);
 

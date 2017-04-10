@@ -21,6 +21,7 @@ describe('Users controller', () => {
         "password": "123xyz"
       })
       .end((err, response) => {
+        console.log(response.body);
         assert(response.body.email === "funkyuser1@test.com");
         assert(response.body.username === "funkyusers");
         done();
@@ -51,7 +52,7 @@ describe('Users controller', () => {
       });
   });
 
-    it('POST /api/users should throw an error for duplicate username', (done) => {
+    it('POST /api/users should throw an error for duplicate email', (done) => {
     request(app)
       .post('/api/users')
       .send({
