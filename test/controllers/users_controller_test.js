@@ -102,7 +102,25 @@ describe('Users controller', () => {
         expect(response.headers["x-auth-token"]).toExist();
         expect(response.body.email).toBe(sarah.email);
         expect(response.body.username).toBe(sarah.username);
-        done()
+        done();
+      });
+  });
+
+  it(' POST /api/user/login should login a user and return a token', (done) => {
+    request(app)
+      .post('/api/user/login')
+      .send(paul)
+      .end((err, response) => {
+        expect(response.headers["x-auth-token"]).toExist();
+
+        User.findOne({email: paul.email})
+          .then((user) => {
+            expect(user.tokens[0].toInclude({
+              access: 'authToken',
+              token: response.headers['x-auth-token']
+            }));
+            done();
+          }).catch(e => done(e));
       });
   });
 
