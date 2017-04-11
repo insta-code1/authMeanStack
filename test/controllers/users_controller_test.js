@@ -2,6 +2,8 @@ const assert = require('assert');
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../../app');
+const expect = require('expect');
+
 let { paul, tony, sarah } = require('./example_user');
 
 const User = mongoose.model('user');
@@ -87,6 +89,21 @@ describe('Users controller', () => {
         done();
       })
       .catch(e => done(e));
+  });
+
+  it('POST /api/users creates a new user and returns a new jwt', (done) => {
+    request(app)
+      .post('/api/users')
+      .send(sarah)
+      .end((err, response) => {
+        if(err) {
+          return done(err);
+        }
+        expect(response.headers["x-auth-token"]).toExist();
+        expect(response.body.email).toBe(sarah.email);
+        expect(response.body.username).toBe(sarah.username);
+        done()
+      });
   });
 
 });

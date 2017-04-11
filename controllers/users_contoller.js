@@ -13,9 +13,12 @@ module.exports = {
 
     User.create(userAttr)
       .then(user => {
-        res.send(user.confirmUser());
-      }).catch(e => res.send(e.errors));
-
+       return user.createAuthToken();
+      })
+      .then((token) => {
+        res.header('x-auth-token', token).send(_.omit(userAttr, ["password"]));
+      })
+      .catch(e => res.send(e.errors));
   }
 
 };

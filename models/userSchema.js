@@ -4,6 +4,7 @@ const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 
 const userSchema = new Schema({
@@ -44,9 +45,6 @@ const userSchema = new Schema({
 });
 
 userSchema.plugin(uniqueValidator);
-jwt.sign({
-  data: 'foobar'
-}, 'secret', { expiresIn: '1h' });
 
 userSchema.methods.createAuthToken = function () {
   let user = this;
@@ -55,11 +53,11 @@ userSchema.methods.createAuthToken = function () {
     _id: user._id,
     access
   },
-    process.enc.JWT_SECRET,
+    process.env.JWT_SECRET,
     { expiresIn: '24h' }
   );
 
-  user.tokens.push(token);
+  user.tokens.push({access, token});
 
   return user.save().then(() => {
     return token;
