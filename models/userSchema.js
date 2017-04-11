@@ -57,7 +57,7 @@ userSchema.methods.createAuthToken = function () {
     { expiresIn: '24h' }
   );
 
-  user.tokens.push({access, token});
+  user.tokens.push({ access, token });
 
   return user.save().then(() => {
     return token;
@@ -86,6 +86,25 @@ userSchema.methods.confirmUser = function () {
 
   return _.pick(userObj, ["username", "email", "_id"]);
 };
+
+userSchema.statics.confirmPassword = function (email, password) {
+  let User = this;
+  return User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        return Promise.reject('No user found with this email');
+      }
+      return new Promise((resolve, reject) => {
+        bcrypt.compare(password, user.password, (err, res) => {
+          if (res) {
+            resolve(user);
+          } else {
+            reject('incorrect password');
+          }
+        });
+      })
+    }).catch(e => reject(e));
+}
 
 
 

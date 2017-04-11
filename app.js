@@ -5,6 +5,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 if (process.env.NODE_ENV !== "test") {
   mongoose.connect('mongodb://localhost/authapp');

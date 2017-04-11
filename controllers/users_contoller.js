@@ -19,6 +19,18 @@ module.exports = {
         res.header('x-auth-token', token).send(_.omit(userAttr, ["password"]));
       })
       .catch(e => res.send(e.errors));
+  },
+
+  login(req, res) {
+    User.confirmPassword(req.body.email, req.body.password)
+      .then(user => {
+        console.log(user)
+        return user.createAuthToken();
+      })
+      .then((token) => {
+        res.header('x-auth-token', token).send({ message: 'success'});
+      })
+      .catch(e => res.status(401).send({message: 'login details incorrect'}));
   }
 
 };

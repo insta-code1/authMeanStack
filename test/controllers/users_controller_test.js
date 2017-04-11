@@ -7,12 +7,11 @@ const expect = require('expect');
 let { paul, tony, sarah } = require('./example_user');
 
 const User = mongoose.model('user');
-/*
-  username: 'funkyusers',
-  email: 'funkyuser1@test.com',
-  password: '123xyz',
-  _id: '58e7b76b82e2eb38f0c61d8f'
-  */
+
+const createUser = (user) =>{
+  return User.create(user);
+};
+
 
 describe('Users controller', () => {
   it('POST /api/users create a new user', (done) => {
@@ -107,21 +106,21 @@ describe('Users controller', () => {
   });
 
   it(' POST /api/user/login should login a user and return a token', (done) => {
-    request(app)
-      .post('/api/user/login')
-      .send(paul)
-      .end((err, response) => {
-        expect(response.headers["x-auth-token"]).toExist();
+    createUser(paul)
+    .then(() => {
+      request(app)
+        .post('/api/user/login')
+        .send(paul)
+        .end((err, response) => {
+          expect(response.headers["x-auth-token"]).toExist();
 
-        User.findOne({email: paul.email})
-          .then((user) => {
-            expect(user.tokens[0].toInclude({
-              access: 'authToken',
-              token: response.headers['x-auth-token']
-            }));
-            done();
-          }).catch(e => done(e));
-      });
+          User.findOne({email: paul.email})
+            .then((user) => {
+              assert(user.tokens[0].token === response.headers["x-auth-token"]);
+              done();
+            }).catch(e => done(e));
+        });
+    }).catch(e => done(e));
   });
 
 });
