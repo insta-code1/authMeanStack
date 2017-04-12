@@ -104,8 +104,24 @@ userSchema.statics.confirmPassword = function (email, password) {
         });
       })
     }).catch(e => reject(e));
-}
+};
 
+userSchema.statics.confirmToken = function(token) {
+  let User = this;
+  let decodedToken;
+
+  try {
+    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (e) {
+    return Promise.reject();
+  }
+
+  return User.findOne({
+    '_id': decodedToken._id,
+    'tokens.token': token,
+    'token.access': 'authToken'
+  });
+};
 
 
 const User = mongoose.model('user', userSchema);
