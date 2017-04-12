@@ -141,10 +141,44 @@ describe('Users controller', () => {
                 expect(user.username).toBe("awesomeuserftw");
                 done();
               }).catch(e => done(e));
-          })
+          });
       });
   });
 
+it('PUT /api/user/update invalid request responds with an error message', (done) => {
+    request(app)
+      .post('/api/users')
+      .send(sarah)
+      .expect(200)
+      .end((err, response) => {
+        let token = response.headers["x-auth-token"];
+        request(app)
+          .put('/api/user/update')
+          .set('x-auth-token', token + "sldibasdkjsb" )
+          .send({ "username": "awesomeuserftw"})
+          .expect(401)
+          .end((err, response) => {
+            expect(response.body.message).toBe('invalid credentials');
+            done();
+          });
+      });
+  });
 
+it('PUT /api/user/update providing no token responds with an error message', (done) => {
+    request(app)
+      .post('/api/users')
+      .send(sarah)
+      .expect(200)
+      .end((err, response) => {
+        request(app)
+          .put('/api/user/update')
+          .send({ "username": "awesomeuserftw"})
+          .expect(401)
+          .end((err, response) => {
+            expect(response.body.message).toBe('invalid credentials');
+            done();
+          });
+      });
+  });
 
 });
