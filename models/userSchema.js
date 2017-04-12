@@ -118,8 +118,7 @@ userSchema.statics.confirmToken = function(token) {
 
   return User.findOne({
     '_id': decodedToken._id,
-    'tokens.token': token,
-    'token.access': 'authToken'
+    'tokens.token': token
   });
 };
 

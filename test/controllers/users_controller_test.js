@@ -123,4 +123,28 @@ describe('Users controller', () => {
     }).catch(e => done(e));
   });
 
+  it('PUT /api/user/update updates the username', (done) => {
+    request(app)
+      .post('/api/users')
+      .send(sarah)
+      .expect(200)
+      .end((err, response) => {
+        let token = response.headers["x-auth-token"];
+        request(app)
+          .put('/api/user/update')
+          .set('x-auth-token', token)
+          .send({ "username": "awesomeuserftw"})
+          .end((err, response) => {
+            expect(response.body.message).toBe('success');
+            User.findOne({ email: sarah.email })
+              .then(user => {
+                expect(user.username).toBe("awesomeuserftw");
+                done();
+              }).catch(e => done(e));
+          })
+      });
+  });
+
+
+
 });
