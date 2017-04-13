@@ -41,6 +41,14 @@ module.exports = {
       .then((user) => {
         res.status(200).send({message: 'success'})
       }).catch(() => res.status(401));
+  },
+
+  logout(req, res) {
+    return req.user.logout(req.token)
+      .then(() => {
+        res.status(200).send({ message: 'logged out'});
+      }).catch(() => res.status(401));
+
   }
 
 };

@@ -7,5 +7,6 @@ router.get('/api', UserController.testResponse);
 router.post('/api/users', UserController.create);
 router.post('/api/user/login', UserController.login);
 router.put('/api/user/update', verifyToken, UserController.update);
+router.delete('/api/user/logout', verifyToken, UserController.logout);
 
 module.exports = router;

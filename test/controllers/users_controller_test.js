@@ -181,4 +181,24 @@ it('PUT /api/user/update providing no token responds with an error message', (do
       });
   });
 
+  it('DELETE /api/user/logout logs the user out', (done) => {
+    request(app)
+      .post('/api/users')
+      .send(tony)
+      .end((err, response) => {
+        let token = response.headers["x-auth-token"];
+        request(app)
+          .delete('/api/user/logout')
+          .set('x-auth-token', token)
+          .end(() => {
+            User.findOne({ email: tony.email })
+              .then(user => {
+                expect(user.tokens.length).toBe(0);
+                done();
+              }).catch(e => done(e));
+          });
+      });
+  });
+
+
 });

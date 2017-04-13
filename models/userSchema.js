@@ -122,6 +122,16 @@ userSchema.statics.confirmToken = function(token) {
   });
 };
 
+userSchema.methods.logout = function(token) {
+  let user = this;
+
+  return user.update({
+    $pull: {
+      tokens: {token}
+    }
+  });
+};
+
 
 const User = mongoose.model('user', userSchema);
 
