@@ -49,6 +49,13 @@ module.exports = {
         res.status(200).send({ message: 'logged out'});
       }).catch(() => res.status(401));
 
+  },
+
+  deleteAccount(req, res) {
+    return User.findByIdAndRemove({ _id: req.user._id})
+      .then(() => {
+        res.status(200).send({ message: 'confirmed'});
+      }).catch(() => res.status(401));
   }
 
 };

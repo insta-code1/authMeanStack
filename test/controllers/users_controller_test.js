@@ -201,4 +201,24 @@ it('PUT /api/user/update providing no token responds with an error message', (do
   });
 
 
+  it('DELETE /api/user/delete deletes the user', (done) => {
+    request(app)
+      .post('/api/users')
+      .send(tony)
+      .end((err, response) => {
+        let token = response.headers["x-auth-token"];
+        request(app)
+          .delete('/api/user/delete')
+          .set('x-auth-token', token)
+          .end(() => {
+            User.findOne({ email: tony.email })
+              .then(user => {
+                expect(user).toBe(null);
+                done();
+              }).catch(e => done(e));
+          });
+      });
+  });
+
+
 });
